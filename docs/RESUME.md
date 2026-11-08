@@ -127,3 +127,15 @@ v0.2.0 is DONE and LIVE. Everything in docs/reviews/FINDINGS-v0.2.md and docs/TO
   - PR now: jqueryscript/awesome-claude-code (Clients & GUIs), filipecalegario/awesome-vibe-coding (Local Apps), awesome-vibe-coding/awesome-vibe-coding (Desktop & Local Apps, disclose own project), Omrigotlieb/awesome-anthropic (Coding & Developer Tools, disclose), ccplugins/awesome-claude-code-plugins (Companion Apps & Tools), ai-for-developers/awesome-ai-coding-tools, steven2358/awesome-generative-ai (Custom interfaces, lands in Discoveries), mahseema/awesome-ai-tools, jamesmurdza/awesome-ai-devtools (loose fit).
   - Later: hesreallyhim/awesome-claude-code (owner submits via WEB issue form only, from 22 Nov if commits continue, or at 100 stars). 0PandaDEV/awesome-windows (needs 50 stars and 30 days).
   - Outside GitHub (owner's accounts): Show HN, r/ClaudeAI, r/ClaudeCode, r/vibecoding, Product Hunt, AlternativeTo, dev.to, Claude Developers Discord.
+
+## Listing PRs opened 8 Nov ~20:25 (owner approved; each discloses own project + built with AI)
+- https://github.com/jqueryscript/awesome-claude-code/pull/930 (maintainer usually adds entries himself, low odds)
+- https://github.com/filipecalegario/awesome-vibe-coding/pull/476
+- https://github.com/awesome-vibe-coding/awesome-vibe-coding/pull/244
+- https://github.com/Omrigotlieb/awesome-anthropic/pull/16
+- https://github.com/ai-for-developers/awesome-ai-coding-tools/pull/1234
+- https://github.com/steven2358/awesome-generative-ai/pull/2099 (likely Discoveries list)
+- https://github.com/mahseema/awesome-ai-tools/pull/2714
+- https://github.com/jamesmurdza/awesome-ai-devtools/pull/1425
+- Skipped: ccplugins/awesome-claude-code-plugins (outsiders cannot open PRs). A leftover fork paragpandyareal/awesome-claude-code-plugins can be deleted.
+- Later, owner by hand: hesreallyhim/awesome-claude-code web form (from 22 Nov with more commits, or 100 stars); 0PandaDEV/awesome-windows (50 stars + 30 days).
