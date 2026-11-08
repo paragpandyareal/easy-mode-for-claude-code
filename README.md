@@ -10,7 +10,11 @@ Easy Mode runs the **real Claude Code** on your own computer and shows it in a b
 
 ### ▶ Watch the 80 second demo
 
-[![Demo video: click to play](docs/media/video-poster.png)](docs/media/demo.mp4)
+
+
+Uploading demo.mp4…
+
+
 
 *Click the picture to play the video (`docs/media/demo.mp4`, 4.7 MB). It is recorded in practice mode with a pretend Claude.*
 
