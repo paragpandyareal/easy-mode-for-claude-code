@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Byte Runner · a friendly home for Claude Code</title>
+<meta name="br-token" content="__BR_TOKEN__">
+<link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='2' y='3' width='12' height='8' rx='2' fill='%237ee8c8'/%3E%3Crect x='4' y='5' width='8' height='4' fill='%231b1640'/%3E%3Crect x='5' y='6' width='2' height='2' fill='%23ffe08a'/%3E%3Crect x='9' y='6' width='2' height='2' fill='%23ffe08a'/%3E%3Crect x='5' y='12' width='2' height='3' fill='%237ee8c8'/%3E%3Crect x='9' y='12' width='2' height='3' fill='%237ee8c8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+<script>
+  // Pick the theme before anything draws, so there is no flash of the wrong colours.
+  (function () {
+    var pick = 'auto';
+    try { pick = JSON.parse(localStorage.getItem('br.skin')) || 'auto'; } catch (e) { /* ignore */ }
+    var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.skin = pick === 'auto' ? (dark ? 'arcade' : 'goodboy') : pick;
+  })();
+</script>
+</head>
+<body>
+
+<!-- ============ TOP BAR: brand, every project at a glance, actions ============ -->
+<header class="topbar">
+  <div class="brand">
+    <canvas id="logoBot" width="16" height="16" aria-hidden="true"></canvas>
+    <div class="brand-text">
+      <div class="brand-name" data-l="brand">BYTE RUNNER</div>
+      <div class="brand-sub" data-l="brandSub">a friendly home for Claude Code</div>
+    </div>
+  </div>
+  <nav class="board" id="board" aria-label="Your projects"></nav>
+  <div class="top-actions">
+    <span class="usage-rings hidden" id="usageRings"></span>
+    <button class="btn btn-undo" id="undoBtn" title="Undo Claude's last changes (Ctrl+Z when the box is empty)" disabled><span class="ico">↶</span><span class="lbl">Undo</span></button>
+    <button class="btn btn-ghost hidden" id="redoBtn" title="Put back what you just undid"><span class="ico">↷</span><span class="lbl">Redo</span></button>
+    <button class="btn btn-ghost expert" id="termBtn" title="Open this same chat in a real terminal"><span class="ico mono">&gt;_</span><span class="lbl">Terminal</span></button>
+    <button class="btn btn-ghost" id="detailBtn" type="button" aria-pressed="true"><span class="ico">✨</span><span class="lbl">Just results</span></button>
+    <button class="btn btn-ghost" id="layoutBtn" title="Move, resize, add or hide blocks"><span class="ico">▦</span><span class="lbl">Customise</span></button>
+    <button class="btn btn-ghost icon-only" id="findBtn" title="Find anything (Ctrl+K)">🔍</button>
+    <button class="btn btn-ghost icon-only" id="skinBtn" title="Switch theme">🎨</button>
+    <button class="btn btn-ghost icon-only" id="soundBtn" title="Sounds and alerts" aria-haspopup="menu" aria-expanded="false">🔔</button>
+  </div>
+</header>
+
+<div class="banner demo-banner hidden" id="demoBanner"></div>
+<div class="banner term-banner hidden" id="termBanner">
+  <span>This chat is open in your terminal right now, so the message box here is paused.</span>
+  <button class="btn btn-small btn-mint" id="reclaimBtn">Bring it back here</button>
+</div>
+
+<!-- ============ ARRANGE BAR (shown while customising) ============ -->
+<div class="arrange-bar hidden" id="arrangeBar">
+  <b>✋ Arrange mode</b>
+  <span class="ab-hint">Drag a block by its top bar, resize from the corner. Nothing overlaps.</span>
+  <div class="ab-presets" id="presetRow"></div>
+  <div class="ab-add"><button class="btn btn-small btn-mint" id="addBlockBtn" type="button">+ Add a block</button><div class="add-menu hidden" id="addMenu"></div></div>
+  <label class="ab-opt"><input type="checkbox" id="expertToggle"> Show model and effort pickers</label>
+  <label class="ab-opt"><input type="checkbox" id="barToggle" checked> Bottom bar</label>
+  <button class="btn btn-small btn-ghost" id="resetLayout" type="button" title="Put the blocks back how the layout started">↺ Reset</button>
+  <button class="btn btn-small btn-go" id="arrangeDone" type="button">✓ Done</button>
+</div>
+
+<!-- ============ MAIN: a free-form board of blocks ============ -->
+<main class="area" id="area"><div class="grid" id="grid"></div></main>
+<nav class="phone-tabs" id="phoneTabs" role="tablist" aria-label="What to show">
+  <button type="button" role="tab" data-tab="chat"><span>💬</span>Chat<b class="tab-badge" id="tabBadge" hidden></b></button>
+  <button type="button" role="tab" data-tab="scene"><span>🌳</span>Scene</button>
+  <button type="button" role="tab" data-tab="lists"><span>📋</span>Lists</button>
+  <button type="button" role="tab" data-tab="preview"><span>👀</span>Preview</button>
+</nav>
+
+<!-- The scene and the chat live here until the board places them in their blocks. -->
+<div id="parts" hidden>
+  <div id="scenePart">
+    <div class="stage" id="stage">
+      <canvas id="world" aria-label="Animated scene showing what Claude is doing"></canvas>
+      <div class="hud">
+        <span class="hud-chip" id="hudStage">READY</span>
+        <span class="hud-chip coin" id="hudCostWrap" title="What this session has used"><i class="coin-ico"></i><b id="hudCost">$0.00</b></span>
+      </div>
+      <div class="scene-ask hidden" id="sceneAsk" role="group" aria-label="Answer Claude"></div>
+      <div class="say" id="worldSay">Hi! Pick a project to start.</div>
+      <div class="game-hud hidden" id="gameHud"><b id="gameScore">0</b><small id="gameBest"></small><span id="gameMsg"></span><button class="btn btn-small btn-ghost" id="gameQuit" title="Stop playing">✕</button></div>
+      <button class="btn btn-small play-btn hidden" id="playBtn"></button>
+    </div>
+
+  </div>
+  <div id="chatPart" class="chat-part">
+    <div class="feed" id="feed" aria-live="polite"></div>
+
+    <button class="needs-bar hidden" id="needsBar" type="button"><span class="nb-ico">!</span><span id="needsText">Claude needs you</span><span id="needsShort" class="nb-short"></span><b>Show me ▾</b></button>
+
+    <form class="composer" id="composer" autocomplete="off">
+      <div class="attach-row hidden" id="attachRow"></div>
+      <div class="slash-pop hidden" id="slashPop" role="listbox"></div>
+      <div class="composer-box">
+        <button type="button" class="btn btn-ghost icon-only" id="attachBtn" title="Add images, PDFs or files">📎</button>
+        <input type="file" id="fileInput" multiple hidden>
+        <textarea id="prompt" rows="1" placeholder="Tell Claude what to make…" aria-label="Message to Claude"></textarea>
+        <button type="button" class="btn btn-stop hidden" id="stopBtn" title="Stop Claude (Esc)">■ STOP</button>
+        <button type="submit" class="btn btn-go" id="sendBtn" title="Send (Enter)">GO ▶</button>
+      </div>
+      <div class="composer-hint">
+        <span class="key">Enter</span> send <span class="key">Shift+Enter</span> new line <span class="key">/</span> commands and skills <span class="key">Esc</span> stop <span class="key">Alt+1-9</span> projects <span class="hint-files">· drop or paste files</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ STATUS BAR ============ -->
+<footer class="statusbar" id="statusbar">
+  <label class="sb-item sb-mode" title="How much Claude can do without asking">
+    <span class="sb-k" data-l="statMode">SAFETY</span>
+    <select id="modeSel">
+      <option value="default">🛡 Ask me first</option>
+      <option value="acceptEdits">✏️ Edit freely</option>
+      <option value="plan">🗺 Plan first</option>
+      <option value="auto">🤖 Autopilot</option>
+      <optgroup label="Expert modes">
+        <option value="dontAsk">Only what I allowed before</option>
+        <option value="bypassPermissions">⚠ No limits</option>
+      </optgroup>
+    </select>
+  </label>
+  <label class="sb-item expert" title="Which Claude model"><span class="sb-k" data-l="statModel">MODEL</span><select id="modelSel"><option value="">Default</option></select><small class="sb-real" id="modelReal"></small></label>
+  <label class="sb-item expert" title="How hard Claude thinks"><span class="sb-k" data-l="statEffort">EFFORT</span><select id="effortSel"><option value="">Auto</option></select></label>
+  <div class="sb-item sb-meter" id="ctxWrap" title="How full Claude's memory of this chat is"><span class="sb-k" data-l="statCtx">MEMORY</span><span class="meter dots"><i id="ctxBar"></i></span><b id="ctxPct">0%</b></div>
+  <div class="sb-item sb-meter" id="fiveWrap" title="Your 5-hour usage limit"><span class="sb-k" data-l="stat5">5 HOURS</span><span class="meter m-peach"><i id="fiveBar"></i></span><b id="fivePct">—</b><small id="fiveReset"></small></div>
+  <div class="sb-item sb-meter" id="weekWrap" title="Your weekly usage limit"><span class="sb-k" data-l="statWeek">WEEK</span><span class="meter m-lilac"><i id="weekBar"></i></span><b id="weekPct">—</b><small id="weekReset"></small></div>
+  <div class="sb-item sb-score" id="sbCostWrap" title="What this session used"><span class="sb-k" data-l="statScore">THIS SESSION</span><b id="sbCost">$0.00</b><small id="sbCostNote"></small></div>
+  <div class="sb-item sb-status"><i class="dot" id="connDot"></i><span id="connText">connecting</span></div>
+</footer>
+
+<!-- ============ HELPER DRILL-IN SHEET ============ -->
+<aside class="sheet hidden" id="helperSheet" aria-label="Helper details">
+  <header class="sheet-head"><canvas id="sheetAvatar" width="20" height="14"></canvas><div><div class="crumb" id="sheetCrumb">Main ›</div><h2 id="sheetTitle">Helper</h2></div><button class="modal-x" id="sheetClose">✕</button></header>
+  <div class="sheet-meta" id="sheetMeta"></div>
+  <div class="sheet-body" id="sheetBody"></div>
+</aside>
+
+<!-- ============ BIG VIEWER (preview full size, code changes) ============ -->
+<div class="viewer hidden" id="viewer" role="dialog" aria-modal="true">
+  <div class="viewer-bar">
+    <b id="viewerTitle">Preview</b>
+    <div class="seg" id="viewerSeg"><button data-w="100%" class="on">Computer</button><button data-w="820px">Tablet</button><button data-w="390px">Phone</button></div>
+    <button class="btn btn-small btn-ghost" id="viewerReload">⟳ Reload</button>
+    <button class="btn btn-small btn-ghost" id="viewerClose">✕ Close</button>
+  </div>
+  <div class="viewer-body" id="viewerBody"></div>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div class="modal hidden" id="newModal" role="dialog" aria-modal="true" aria-labelledby="newTitle">
+  <div class="modal-card">
+    <button class="modal-x" data-close>✕</button>
+    <h2 id="newTitle" class="modal-title" data-l="newTitle">NEW GAME</h2>
+    <p class="modal-sub">Pick the folder Claude can work in. It can only change files inside it.</p>
+    <div class="choice-grid">
+      <div class="choice choice-form">
+        <span class="choice-ico">✨</span><b>Start something new</b>
+        <div class="inline-form"><input id="newName" placeholder="Name it, e.g. Dee's café site" maxlength="60"><button class="btn btn-small btn-mint" id="makeFolderBtn">Create</button></div>
+        <small>Goes in your “Byte Runner Projects” folder</small>
+      </div>
+      <button class="choice" id="pickFolderBtn"><span class="choice-ico">📁</span><b>Use a folder I have</b><small>Opens your folder picker</small></button>
+    </div>
+    <div class="recent" id="recentWrap">
+      <h3>Recent</h3>
+      <ul id="recentList"></ul>
+    </div>
+    <div class="typed-path"><input id="typedPath" placeholder="…or paste a folder path"><button class="btn btn-small btn-ghost" id="typedGo">Use</button></div>
+    <h3 class="mt">How careful should Claude be?</h3>
+    <div class="safety-grid" id="safetyGrid">
+      <label class="safety"><input type="radio" name="safety" value="default" checked><span><b>🛡 Ask me first</b><small>Claude asks before changing files or running anything. Best to start.</small></span></label>
+      <label class="safety"><input type="radio" name="safety" value="acceptEdits"><span><b>✏️ Edit freely</b><small>Changes files on its own, asks before running commands.</small></span></label>
+      <label class="safety"><input type="radio" name="safety" value="plan"><span><b>🗺 Plan first</b><small>Looks around and writes a plan. Nothing changes until you approve.</small></span></label>
+      <label class="safety" id="autoChoice"><input type="radio" name="safety" value="auto"><span><b>🤖 Autopilot</b><small>Handles safe steps itself and checks with you on risky ones.</small></span></label>
+    </div>
+    <p class="modal-foot">Undo works in every mode, so you can always roll back.</p>
+  </div>
+</div>
+
+<div class="modal hidden" id="teachModal" role="dialog" aria-modal="true" aria-labelledby="teachTitle">
+  <div class="modal-card">
+    <button class="modal-x" data-close>✕</button>
+    <h2 id="teachTitle" class="modal-title">TEACH CLAUDE ABOUT YOU</h2>
+    <p class="modal-sub">Claude keeps these notes in a CLAUDE.md file and reads them every time. Answer in your own words.</p>
+    <label class="field">What is this project?<textarea id="tWhat" rows="2" placeholder="A website for my café, a budget tracker, my uni notes…"></textarea></label>
+    <label class="field">Who is it for?<input id="tWho" placeholder="Me, my customers, my team…"></label>
+    <label class="field">How should Claude talk to you?
+      <select id="tTone"><option>Simple words, no jargon please</option><option>Normal, a bit of tech is fine</option><option>Techy, I know my stuff</option></select></label>
+    <label class="field">Anything Claude should always or never do?<textarea id="tRules" rows="2" placeholder="Always ask before deleting. Use Australian spelling…"></textarea></label>
+    <div class="modal-actions"><button class="btn btn-go" id="teachGo">Write my notes ▶</button></div>
+  </div>
+</div>
+
+<div class="modal hidden" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+  <div class="modal-card welcome-card">
+    <h2 id="welcomeTitle" class="modal-title">WELCOME!</h2>
+    <p class="modal-sub">Two quick choices. You can change both any time from the top bar.</p>
+    <h3>Pick your world</h3>
+    <div class="skin-pick" id="skinPick"></div>
+    <h3>Should we let you know when Claude is done or needs you?</h3>
+    <div class="alert-pick" id="alertPick">
+      <label class="safety"><input type="radio" name="alerts" value="alerts" checked><span><b>🔔 Alerts only</b><small>A sound and a pop-up when Claude finishes or needs you. Recommended.</small></span></label>
+      <label class="safety"><input type="radio" name="alerts" value="all"><span><b>🎵 Everything</b><small>Alerts plus little sounds while Claude works.</small></span></label>
+      <label class="safety"><input type="radio" name="alerts" value="off"><span><b>🔕 Quiet</b><small>No sounds. You still see it on screen.</small></span></label>
+    </div>
+    <div class="modal-actions"><button class="btn btn-ghost" id="testSound" type="button">▶ Play a sample</button><button class="btn btn-go" id="welcomeGo" type="button">Let’s go ▶</button></div>
+  </div>
+</div>
+
+<div class="modal hidden" id="setupModal" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
+  <div class="modal-card">
+    <h2 id="setupTitle" class="modal-title">ONE MORE STEP</h2>
+    <div id="setupBody"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="sr-only" id="srLive" role="status" aria-live="assertive"></div>
+<div class="drop-overlay hidden" id="dropOverlay"><div>Drop files for Claude</div></div>
+
+<script src="/static/skins.js"></script>
+<script src="/static/grid.js"></script>
+<script src="/static/world.js"></script>
+<script src="/static/demo.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

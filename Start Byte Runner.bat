@@ -1,0 +1,13 @@
+@echo off
+title Byte Runner (keep this window open)
+cd /d "%~dp0"
+where node >nul 2>nul
+if errorlevel 1 (
+  echo.
+  echo   Node.js is not installed yet. Double-click "Setup Byte Runner.bat" first.
+  echo.
+  pause
+  exit /b 1
+)
+node server.js
+if errorlevel 1 pause

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Byte Runner worlds preview</title>
+<style>
+  body { margin: 0; font: 600 15px system-ui, sans-serif; background: #fff1d2; color: #3a2a3f; padding: 16px; }
+  h1 { margin: 0 0 4px; font-size: 22px; } p { margin: 0 0 12px; }
+  canvas#world { width: 100%; height: 300px; display: block; border: 3px solid #2b1d33; border-radius: 14px; image-rendering: pixelated; cursor: pointer; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  button { font: inherit; padding: 8px 14px; border: 2.5px solid #2b1d33; border-radius: 10px; background: #fff; box-shadow: 2px 2px 0 #2b1d33; cursor: pointer; }
+  button.on { background: #ffd76a; }
+  .pack { display: flex; gap: 14px; flex-wrap: wrap; align-items: end; background: #fff; border: 2.5px solid #2b1d33; border-radius: 12px; padding: 10px 14px; }
+  .pack div { text-align: center; font-size: 12px; } .pack canvas { height: 56px; image-rendering: pixelated; display: block; margin: 0 auto 4px; }
+</style></head><body>
+<h1>Byte Runner, early look at the two worlds</h1>
+<p>Pick a world and a mood. In the game, click the scene or press Space to jump.</p>
+<div class="row" id="skins"><button data-s="goodboy" class="on">🐶 Good Boy Club</button><button data-s="arcade">🤖 Arcade Dusk</button></div>
+<canvas id="world"></canvas>
+<div class="row" id="moods">
+  <button data-m="idle">Waiting for you to type</button><button data-m="run" class="on">Working</button><button data-m="wait">Needs you</button>
+  <button data-m="done">All done!</button><button data-m="error">Something went wrong</button><button data-m="sleep">Asleep</button>
+  <button data-m="helpers">Send helpers out</button><button data-m="game">Play the game</button><button data-m="star">⭐ Diesel's star</button>
+</div>
+<div class="pack" id="pack"></div>
+<script>window.BR_ART_BASE = "art/";</script>
+<script src="world.js"></script>
+<script>
+  const { World, paintBot } = window.ByteWorld;
+  World.init(document.getElementById('world'));
+  World.setSkin('goodboy'); World.setState('run');
+  const pick = (box, el) => { box.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === el)); };
+  document.getElementById('skins').onclick = e => { const b = e.target.closest('button'); if (!b) return; pick(e.currentTarget, b); World.setSkin(b.dataset.s); };
+  document.getElementById('moods').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return; pick(e.currentTarget, b);
+    const m = b.dataset.m; World.play(false);
+    if (m === 'helpers') { World.setState('run'); const id = 'h' + Date.now(); World.drone(id + 'a'); setTimeout(() => World.drone(id + 'b'), 600); setTimeout(() => { World.droneDone(id + 'a'); World.droneDone(id + 'b'); }, 3500); }
+    else if (m === 'game') { World.setState('run'); World.play(true); }
+    else if (m === 'star') { World.setState('idle'); World.dieselStar(); }
+    else if (m === 'done') { World.setState('idle'); World.setState('done'); World.coins(12); }
+    else World.setState(m);
+  };
+  const jump = () => World.jump();
+  document.getElementById('world').onclick = jump;
+  addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); jump(); } });
+  setInterval(() => { if (World.state === 'run' && !(World.game && World.game.on)) World.gem(['#7ee8c8', '#82c8ff', '#ffe08a', '#ff92b4'][Math.floor(Math.random() * 4)]); }, 1400);
+  const pack = document.getElementById('pack');
+  const add = (label, paint) => { const d = document.createElement('div'); const c = document.createElement('canvas'); paint(c); d.append(c, label); pack.append(d); };
+  for (const [n, l] of [['w_front', 'Winston'], ['d_sit', 'Diesel'], ['p_pip_walk', 'Pip, beagle'], ['p_mochi_walk', 'Mochi, tabby cat'], ['p_biscuit_walk', 'Biscuit, collie'], ['p_pepper_walk', 'Pepper, dachshund'], ['p_luna_walk', 'Luna, black cat'], ['p_tofu_walk', 'Tofu, corgi']]) { const d = document.createElement('div'); const i = document.createElement('img'); i.src = 'art/' + n + '.png'; i.style.height = '70px'; i.style.display = 'block'; i.style.margin = '0 auto 4px'; d.append(i, l); pack.append(d); }
+  add('Bit', c => paintBot(c));
+</script>
+</body></html>

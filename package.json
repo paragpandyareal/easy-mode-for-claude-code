@@ -1,0 +1,27 @@
+{
+  "name": "byte-runner",
+  "version": "0.2.0",
+  "description": "A friendly, colourful home for Claude Code. The power of the CLI with the comfort of an app.",
+  "main": "server.js",
+  "bin": {
+    "byte-runner": "server.js"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "practice": "node tools/practice.js",
+    "build-demo": "node tools/build-demo.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "claude-code",
+    "claude",
+    "anthropic",
+    "gui",
+    "terminal",
+    "beginner-friendly",
+    "windows"
+  ],
+  "license": "MIT"
+}
