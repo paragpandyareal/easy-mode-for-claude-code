@@ -1,4 +1,4 @@
-# Byte Runner v0.2, what is left to do
+# Easy Mode v0.2, what is left to do
 
 Updated as work happens. [x] done, [~] in progress, [ ] not started.
 
@@ -68,6 +68,6 @@ Updated as work happens. [x] done, [~] in progress, [ ] not started.
 ## Finish
 - [x] Full test pass: both themes, all 5 layouts at 1280x720, phone, practice, demo, art-failure fallback, security 19/19. Found and fixed a ghost-project bug (closed projects came back)
 - [x] Copy public-next over public (old UI kept in backupspublic-v0.1)
-- [x] Rebuild the demo (distbyte-runner-demo.html, 24/24 checks pass)
+- [x] Rebuild the demo (disteasy-mode-demo.html, 24/24 checks pass)
 - [x] Update README and HANDOVER (trust gate, art credits, "In memory of Diesel"), plus an About box in the app, version 0.2.0
 - [x] Restart your server (4430 practice, now serving public)

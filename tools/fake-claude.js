@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
  * A pretend Claude Code that speaks the same stream-json protocol.
- * Used for testing Byte Runner without a login, and for recording the demo.
+ * Used for testing Easy Mode without a login, and for recording the demo.
  * Usage: set CLAUDE_PATH="node tools/fake-claude.js" (or point at this file).
  */
 'use strict';

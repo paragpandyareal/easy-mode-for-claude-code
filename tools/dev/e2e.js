@@ -1,4 +1,4 @@
-// End-to-end check of Byte Runner's API against practice mode.
+// End-to-end check of Easy Mode's API against practice mode.
 // usage: node e2e.js <port> <project dir>
 const http = require('http');
 const [port, dir] = [Number(process.argv[2] || 4318), process.argv[3]];

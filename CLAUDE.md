@@ -1,4 +1,4 @@
-# Byte Runner, notes for Claude
+# Easy Mode, notes for Claude
 
 **Start here every session: read `docs/RESUME.md` first.** It says what is live, what is in progress and the next steps in order. The full plan from the four user reviews is in `docs/PLAN-v0.2.md`. The background and protocol notes are in `HANDOVER.md`.
 

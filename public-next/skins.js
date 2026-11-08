@@ -1,5 +1,5 @@
 /* =========================================================
-   BYTE RUNNER · skins
+   EASY MODE · skins
    A skin changes the words, colours (style.css [data-skin]),
    the pixel world (world.js) and the sounds, all together.
    Layout and widgets are shared, so a new skin is just data.
@@ -13,7 +13,7 @@
       id: 'arcade', name: 'Arcade Dusk', mode: 'dark', world: 'arcade', lead: 'Bit',
       desc: 'Neon city at sunset with Bit the robot',
       L: {
-        brand: 'BYTE RUNNER', brandSub: 'a friendly home for Claude Code',
+        brand: 'EASY MODE', brandSub: 'for Claude Code',
         newProject: '+ New game', newTitle: 'NEW GAME', start: 'PRESS START', startCta: '▶ NEW GAME',
         player: ['PLAYER 1', 'who is playing'],
         stats: ['GAME STATS', 'this session'],

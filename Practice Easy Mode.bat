@@ -1,0 +1,13 @@
+@echo off
+title Easy Mode PRACTICE (keep this window open)
+cd /d "%~dp0"
+where node >nul 2>nul
+if errorlevel 1 (
+  echo.
+  echo   Node.js is not installed yet. Double-click "Setup Easy Mode.bat" first.
+  echo.
+  pause
+  exit /b 1
+)
+node tools\practice.js
+if errorlevel 1 pause

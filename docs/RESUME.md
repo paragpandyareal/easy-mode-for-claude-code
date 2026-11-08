@@ -1,6 +1,6 @@
 # Where we stopped (8 Nov 2026, about 11:45)
 
-**How to resume:** open Claude Code in `%USERPROFILE%\Projects\Byte Runner` (or anywhere, and point it here), then follow "Next steps" below. Start with step 1, rewriting `public-next/app.js`, and build the Good Boy Club cartoon world from the art listed at the bottom. Run tests with `tools/dev/ui.js`.
+**How to resume:** open Claude Code in `%USERPROFILE%\Projects\Easy Mode` (or anywhere, and point it here), then follow "Next steps" below. Start with step 1, rewriting `public-next/app.js`, and build the Good Boy Club cartoon world from the art listed at the bottom. Run tests with `tools/dev/ui.js`.
 
 The app in `public/` is the **working v0.1 UI plus today's fixes**. It is safe to use.
 The v0.2 redesign is **in progress in `public-next/`** and is not wired up yet.
@@ -10,7 +10,7 @@ The v0.2 redesign is **in progress in `public-next/`** and is not wired up yet.
 - Preview runs on its own port, so pages can't steal the token (server.js, app.js loadPreview).
 - Real account format ("Claude Pro"), and practice/demo say "(pretend)".
 - Page recovers after a server restart ("Session not found" loop fixed).
-- Practice banner. "Practice Byte Runner.bat" plus two desktop shortcuts.
+- Practice banner. "Practice Easy Mode.bat" plus two desktop shortcuts.
 - Review findings and the plan are in `docs/PLAN-v0.2.md`.
 
 ## In public-next (written, not yet tested together)
@@ -114,7 +114,7 @@ Live checklist: **docs/TODO-v0.2.md** (ticked as work lands). Read it first.
 ## >>> START HERE (latest, 8 Nov about 19:40) <<<
 v0.2.0 is DONE and LIVE. Everything in docs/reviews/FINDINGS-v0.2.md and docs/TODO-v0.2.md is ticked.
 - public/ now holds the v0.2 UI (identical to public-next/). Old v0.1 UI is in backups/public-v0.1. Old README/HANDOVER copies in backups/.
-- dist/byte-runner-demo.html rebuilt. (dist/byte-runner-demo-next.html is an older build and can be deleted.)
+- dist/easy-mode-demo.html rebuilt. (dist/easy-mode-demo-next.html is an older build and can be deleted.)
 - The owner's practice server runs on 4430 serving public/ (no BYTE_RUNNER_UI needed).
 - Tests all pass: full.js (both themes), demo-check.js, every preset at 1280x720, art-failure fallback, attack-check 19/19.
 - Ideas for later: show old messages after Continue (replay the .jsonl transcript), check the Higgsfield licence before launch, a packaged .exe, more themes.

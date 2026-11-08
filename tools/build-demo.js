@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const pub = path.join(__dirname, '..', process.env.BYTE_RUNNER_UI || 'public');
-const out = process.argv[2] || path.join(__dirname, '..', 'dist', 'byte-runner-demo.html');
+const out = process.argv[2] || path.join(__dirname, '..', 'dist', 'easy-mode-demo.html');
 const b64 = f => fs.readFileSync(f).toString('base64');
 
 let html = fs.readFileSync(path.join(pub, 'index.html'), 'utf8');
@@ -26,7 +26,7 @@ html = html.replace(/<script src="\/static\/([\w.]+)"><\/script>/g, (_, f) => {
   return code;
 });
 html = html.replace('<meta name="br-token" content="__BR_TOKEN__">', '<meta name="br-token" content="">');
-html = html.replace(', viewport-fit=cover', '').replace('<title>Byte Runner · a friendly home for Claude Code</title>', '<title>Byte Runner demo</title>');
+html = html.replace(', viewport-fit=cover', '').replace('<title>Easy Mode for Claude Code</title>', '<title>Easy Mode demo</title>');
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, html);
 console.log('Wrote', out, (html.length / 1024 / 1024).toFixed(1) + ' MB');

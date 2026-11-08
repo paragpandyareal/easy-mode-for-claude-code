@@ -1,4 +1,4 @@
-# Byte Runner v0.2 plan
+# Easy Mode v0.2 plan
 
 Made on 8 November 2026 from four reviews run on the owner's PC (practice mode).
 Reviewers were a UI and UX expert, Priya (product manager), Dee (café owner, very non-technical) and Sam (senior engineer, daily CLI user).

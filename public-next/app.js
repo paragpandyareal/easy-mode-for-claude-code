@@ -1,5 +1,5 @@
 /* =========================================================
-   BYTE RUNNER · app (v0.2)
+   EASY MODE · app (v0.2)
    Turns Claude Code's stream of events into a friendly game screen:
    a session board, widgets you can arrange, alerts for every project,
    and two skins (Arcade Dusk and Good Boy Club).
@@ -82,7 +82,7 @@
     let r;
     try {
       r = await fetch(path, { method: body === undefined ? 'GET' : 'POST', headers: { 'x-br-token': TOKEN, 'content-type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) });
-    } catch { return { error: 'Byte Runner is not running. Start it again from the desktop shortcut.' }; }
+    } catch { return { error: 'Easy Mode is not running. Start it again from the desktop shortcut.' }; }
     let j = {}; try { j = await r.json(); } catch { /* */ }
     if (r.status === 403 && j.error === 'Not allowed') { location.reload(); return { error: 'Reconnecting…' }; }
     if (r.status === 404 && j.error === 'Session not found') { resync(true); return { error: 'That chat had ended, so I tidied it away. Start a new one or press Continue.' }; }
@@ -272,7 +272,7 @@
     const done = [...sessions.values()].filter(s => s.alert === 'done' && (s.id !== activeId || document.hidden));
     const n = needs.length + done.length;
     const first = needs[0] || done[0];
-    document.title = n ? `(${n}) ${first.info.title || 'Claude'} ${needs.length ? 'needs you' : 'is done'} · Byte Runner` : 'Byte Runner · a friendly home for Claude Code';
+    document.title = n ? `(${n}) ${first.info.title || 'Claude'} ${needs.length ? 'needs you' : 'is done'} · Easy Mode` : 'Easy Mode for Claude Code';
     const c = document.createElement('canvas'); c.width = 32; c.height = 32; const g = c.getContext('2d');
     const img = new Image();
     img.onload = () => { g.drawImage(img, 0, 0, 32, 32); if (n) { g.fillStyle = needs.length ? '#ffd23f' : '#34b37a'; g.beginPath(); g.arc(23, 9, 9, 0, 7); g.fill(); g.fillStyle = '#2b1d33'; g.font = 'bold 13px sans-serif'; g.textAlign = 'center'; g.fillText(n > 9 ? '9+' : String(n), 23, 14); } $('#favicon').href = c.toDataURL(); };
@@ -836,7 +836,7 @@
   function fillTemplate(tpl, s) {
     const pc = r => pctOf(r) == null ? '—' : pctOf(r) + '%';
     const v = { model: s.info.model ? prettyModel(s.info.model) : prettyModel(realModel(s)) || 'Default', dir: base(s.info.cwd), branch: (s.env && s.env.branch) || '—',
-      context: ctxPct(s) + '%', five: pc(s.rate.five_hour), week: pc(s.rate.seven_day), cost: money(s.cost),
+      context: ctxPct(s) + '%', five: pc(s.rate.five_hour), week: pc(s.rate.seven_day), cost: isPlanUser(s) ? 'plan' : money(s.cost),
       mode: MODE_NAMES[s.info.mode] || s.info.mode, effort: s.info.effort || 'auto', time: new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }), cache: cacheNote(s) };
     return String(tpl).replace(/\{(\w+)\}/g, (m, k) => v[k] ?? m);
   }
@@ -1027,7 +1027,7 @@
       else if (useMine) { if (s.slText != null) out.innerHTML = ansi(s.slText) || '<span style="opacity:.6">(your status line printed nothing)</span>'; else { out.textContent = 'Running your status line…'; refreshStatusLine(s, true); } }
       else out.innerHTML = esc(fillTemplate(tpl, s));
       b.append(out);
-      if (useMine && s.slErr) b.append(h('div', { class: 'sl-err' }, '⚠ Your status line said: ' + s.slErr.slice(0, 200), /jq/i.test(s.slErr) ? h('div', {}, 'It needs a small program called jq. To install it, open PowerShell and type ', h('code', {}, 'winget install jqlang.jq'), ', then restart Byte Runner.') : null));
+      if (useMine && s.slErr) b.append(h('div', { class: 'sl-err' }, '⚠ Your status line said: ' + s.slErr.slice(0, 200), /jq/i.test(s.slErr) ? h('div', {}, 'It needs a small program called jq. To install it, open PowerShell and type ', h('code', {}, 'winget install jqlang.jq'), ', then restart Easy Mode.') : null));
       const tools = h('div', { class: 'sl-tools' });
       if (mine) tools.append(h('label', {}, h('input', { type: 'checkbox', checked: useMine ? true : null, onchange: e => { store.set('slMode', e.target.checked ? 'auto' : 'template'); renderWidgets(['statusline']); } }), ' Use my Claude Code status line'), h('small', { title: mine.command }, '(' + mine.scope + ')'));
       if (!useMine) {
@@ -1334,7 +1334,7 @@
         av, h('span', { class: 'sn', title: 'Double-click to rename', ondblclick: e => { e.stopPropagation(); const n = prompt('Name this project', s.info.title || base(s.info.cwd)); if (n && n.trim()) { s.info.title = n.trim(); const names = store.get('names', {}); names[s.info.cwd] = s.info.title; store.set('names', names); renderBoard(); } } }, (store.get('names', {})[s.info.cwd]) || s.info.title || base(s.info.cwd)), h('span', { class: 'st' }, label),
         h('span', { class: 'sx', title: 'Close', role: 'button', onclick: e => { e.stopPropagation(); closeSession(s.id); } }, '✕'),
         s.waiting > 1 ? h('span', { class: 'badge' }, String(s.waiting)) : null,
-        s.ctxUsed ? Object.assign(ring(ctxPct(s), 'var(--mint)', '', 18), { className: 'ring card-ring', title: 'Memory ' + ctxPct(s) + '% full' }) : null);
+        ctxPct(s) >= 50 ? Object.assign(ring(ctxPct(s), 'var(--mint)', '', 18), { className: 'ring card-ring', title: 'Memory ' + ctxPct(s) + '% full' }) : null);
       card.addEventListener('click', () => setActive(s.id));
       nav.append(card);
     }
@@ -1439,7 +1439,7 @@
     const waiting = [...sessions.values()].filter(x => stateOf(x) === 'needs');
     const every = store.get('remind', 75);
     for (const x of waiting) if (live && every && Date.now() - (x.lastNag || 0) > every * 1000) { x.lastNag = Date.now(); Sound.play('wait'); }
-    if (waiting.length && document.hidden) document.title = tickN % 2 ? '🔔 ' + (waiting[0].info.title || 'Claude') + ' needs you' : '(' + waiting.length + ') Byte Runner';
+    if (waiting.length && document.hidden) document.title = tickN % 2 ? '🔔 ' + (waiting[0].info.title || 'Claude') + ' needs you' : '(' + waiting.length + ') Easy Mode';
     else if (tickN % 2 === 0 && /^🔔/.test(document.title)) updateAttention();
   }, 1000);
 
@@ -1602,8 +1602,8 @@
   function showSetup(kind) {
     const m = $('#setupModal'); $('#setupTitle').textContent = 'ONE MORE STEP';
     const body = $('#setupBody'); body.innerHTML = '';
-    if (kind === 'missing') body.append(h('p', { class: 'modal-sub' }, 'Byte Runner uses the real Claude Code on your computer, and it is not installed yet.'),
-      h('ol', { class: 'setup-steps' }, h('li', {}, 'Close this page and the Byte Runner window.'), h('li', { html: 'Double-click <code>Setup Byte Runner.bat</code> again. It installs Claude Code for you.' }), h('li', { html: 'Or open PowerShell and run <code>winget install Anthropic.ClaudeCode</code>, then start Byte Runner again.' })),
+    if (kind === 'missing') body.append(h('p', { class: 'modal-sub' }, 'Easy Mode uses the real Claude Code on your computer, and it is not installed yet.'),
+      h('ol', { class: 'setup-steps' }, h('li', {}, 'Close this page and the Easy Mode window.'), h('li', { html: 'Double-click <code>Setup Easy Mode.bat</code> again. It installs Claude Code for you.' }), h('li', { html: 'Or open PowerShell and run <code>winget install Anthropic.ClaudeCode</code>, then start Easy Mode again.' })),
       h('div', { class: 'modal-actions' }, h('button', { class: 'btn btn-ghost', type: 'button', onclick: () => m.classList.add('hidden') }, 'Close')));
     m.classList.remove('hidden');
   }
@@ -1646,7 +1646,7 @@
     add('Actions', 'Sounds and alerts', 'quiet, alerts only, everything, reminders', () => setTimeout(() => $('#soundBtn').click(), 30));
     add('Actions', 'Teach Claude about you', 'writes CLAUDE.md', () => openModal('#teachModal'));
     add('Actions', 'Keyboard shortcuts', 'show them all', () => openShortcuts());
-    add('Actions', 'About Byte Runner', 'version and credits', () => openAbout());
+    add('Actions', 'About Easy Mode', 'version and credits', () => openAbout());
     if (s) {
       add('Actions', 'Export this chat', 'save it as a Markdown file', () => exportChat(s));
       add('Actions', 'Open the project folder', base(s.info.cwd), () => api(`/api/session/${s.id}/open-folder`, {}));
@@ -1705,7 +1705,7 @@
     closeModals(); m.classList.remove('hidden');
   }
   function openAbout() {
-    const m = $('#setupModal'); $('#setupTitle').textContent = 'ABOUT BYTE RUNNER';
+    const m = $('#setupModal'); $('#setupTitle').textContent = 'ABOUT EASY MODE';
     const body = $('#setupBody'); body.innerHTML = '';
     body.append(h('p', { class: 'modal-sub' }, 'A friendly, colourful home for Claude Code. Version ' + (appVersion || '0.2') + '. Free and open source (MIT).'),
       h('p', {}, 'It runs the real Claude Code on your computer, so your plan, skills, hooks and settings all work as they do in the terminal. Not made by or affiliated with Anthropic.'),
@@ -1716,7 +1716,7 @@
   }
   // Save the whole chat as a Markdown file the user can keep or share.
   function exportChat(s) {
-    const lines = [`# ${s.info.title || base(s.info.cwd)}`, '', `Exported from Byte Runner on ${new Date().toLocaleString()}.`, ''];
+    const lines = [`# ${s.info.title || base(s.info.cwd)}`, '', `Exported from Easy Mode on ${new Date().toLocaleString()}.`, ''];
     for (const el of s.feed.children) {
       if (el.classList.contains('msg-user')) lines.push('**You:** ' + el.querySelector('.say-box').textContent.trim(), '');
       else if (el.classList.contains('msg-claude')) lines.push('**Claude:** ' + (el.querySelector('.bubble')._text || el.textContent).trim(), '');
@@ -1906,7 +1906,7 @@
     applySkin(store.get('skin', 'auto'), false);
     setActive(null);
     if (DEMO) {
-      const b = $('#demoBanner'); b.innerHTML = '<b>DEMO</b> You’re watching a pretend run. Install Byte Runner on your PC to use your own Claude.'; b.classList.remove('hidden');
+      const b = $('#demoBanner'); b.innerHTML = '<b>DEMO</b> You’re watching a pretend run. Install Easy Mode on your PC to use your own Claude.'; b.classList.remove('hidden');
       setConn('on'); Demo.start(onEvent, { toast });
       if (!store.get('welcomed', false)) setTimeout(openWelcome, 400);
       return;

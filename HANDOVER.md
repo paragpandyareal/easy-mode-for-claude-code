@@ -1,4 +1,4 @@
-# Byte Runner · Handover
+# Easy Mode · Handover
 
 Everything you (or Claude Code on your PC) need to pick this project up and keep going.
 
@@ -8,7 +8,7 @@ Last updated 8 November 2026 (evening). Version 0.2.0.
 
 ## 1. The idea in one paragraph
 
-Byte Runner is a free, open source, colourful home for **Claude Code**. It runs the official `claude` CLI on your own computer and shows everything in a fun arcade-style browser screen. The goal is to give people the **best of both** the Claude Code CLI and the Claude desktop app, and to remove the things that make non-technical people give up on the terminal. It is Windows-first, because most beginners are on Windows and most tools ignore them.
+Easy Mode is a free, open source, colourful home for **Claude Code**. It runs the official `claude` CLI on your own computer and shows everything in a fun arcade-style browser screen. The goal is to give people the **best of both** the Claude Code CLI and the Claude desktop app, and to remove the things that make non-technical people give up on the terminal. It is Windows-first, because most beginners are on Windows and most tools ignore them.
 
 ## 2. Why we are building it (research summary)
 
@@ -32,7 +32,7 @@ People don't quit Claude Code because it's hard. They quit because the terminal 
 
 Anthropic does **not** allow third-party apps to log in with a Claude subscription, or to route requests through Free, Pro or Max credentials. They enforce it on their servers, starting January 2026, and they made it explicit in their docs in February 2026.
 
-**How Byte Runner stays on the right side of this.** It never touches logins or tokens. It starts the official `claude` program on the user's own machine, and that program signs in the normal way. So subscriptions, API keys and Bedrock all work, with no auth code of ours. Re-read https://code.claude.com/docs/en/legal-and-compliance before any public launch, because this area keeps changing.
+**How Easy Mode stays on the right side of this.** It never touches logins or tokens. It starts the official `claude` program on the user's own machine, and that program signs in the normal way. So subscriptions, API keys and Bedrock all work, with no auth code of ours. Re-read https://code.claude.com/docs/en/legal-and-compliance before any public launch, because this area keeps changing.
 
 **Never add** OAuth flows, token extraction, or a hosted version that runs Claude for other people.
 
@@ -134,7 +134,7 @@ On Windows it goes through `cmd.exe /d /s /c`, because `claude` may be a `.cmd` 
 | Not signed in | Assistant message with `error: "authentication_failed"`, or a result with `api_error_status: 401` |
 | Helpers | `Agent` or `Task` tool use. Their steps carry `parent_tool_use_id` |
 
-**Save points (Undo).** There is a hidden bare git store per project in `%APPDATA%\ByteRunner\savepoints\<hash>.git`, used with `--git-dir` and `--work-tree`, so the project's own `.git` is never touched. It respects `.gitignore` and also skips `node_modules`, `.venv` and similar. It sets `core.autocrlf=false` so Windows line endings don't change. Undo saves the current state first, then runs `git reset --hard <savepoint>`. It refuses the home folder, drive roots and system folders. The next message to Claude gets a short note saying files were rolled back.
+**Save points (Undo).** There is a hidden bare git store per project in `%APPDATA%\EasyModeClaudeCode\savepoints\<hash>.git`, used with `--git-dir` and `--work-tree`, so the project's own `.git` is never touched. It respects `.gitignore` and also skips `node_modules`, `.venv` and similar. It sets `core.autocrlf=false` so Windows line endings don't change. Undo saves the current state first, then runs `git reset --hard <savepoint>`. It refuses the home folder, drive roots and system folders. The next message to Claude gets a short note saying files were rolled back.
 
 **Security.** It listens on 127.0.0.1 only and checks the Host header. Every action needs the per-launch token, a POST and our own Origin (GET is allowed only for env, files and diff; the token in the query string only for /api/events). Folders with their own hooks, status line, MCP or env need "I trust it". The preview runs on its own port with a per-session key, refuses dot-paths and junctions that lead outside, and sends `connect-src 'self'`. git runs with fsmonitor and hooks switched off. `tools/dev/attack-check.js` re-runs 19 attacks against a throwaway server.
 
@@ -156,9 +156,9 @@ On Windows it goes through `cmd.exe /d /s /c`, because `claude` may be a `.cmd` 
 | `public/fonts/` | Bundled fonts |
 | `tools/fake-claude.js` | Pretend Claude Code that speaks the same protocol, for testing |
 | `tools/practice.js` | Runs the app with the pretend Claude on port 4318 |
-| `tools/build-demo.js` | Builds `dist/byte-runner-demo.html`, one self-contained page |
-| `setup.ps1`, `Setup Byte Runner.bat` | Windows installer (Node, Git, Claude Code via winget, desktop shortcut, sign in) |
-| `Start Byte Runner.bat` | Starts the app |
+| `tools/build-demo.js` | Builds `dist/easy-mode-demo.html`, one self-contained page |
+| `setup.ps1`, `Setup Easy Mode.bat` | Windows installer (Node, Git, Claude Code via winget, desktop shortcut, sign in) |
+| `Start Easy Mode.bat` | Starts the app |
 
 ## 8. How to run and test
 
@@ -174,7 +174,7 @@ Useful environment settings are `CLAUDE_PATH` (a custom claude command), `BYTE_R
 
 ```
 UI_SCRIPT=tools/dev/full.js node tools/dev/ui.js http://127.0.0.1:4318/ out     # practice, about 40 checks (SKIN=goodboy|arcade)
-UI_SCRIPT=tools/dev/demo-check.js node tools/dev/ui.js file:///.../dist/byte-runner-demo.html out   # offline demo, 24 checks
+UI_SCRIPT=tools/dev/demo-check.js node tools/dev/ui.js file:///.../dist/easy-mode-demo.html out   # offline demo, 24 checks
 UI_SCRIPT=tools/dev/tour.js node tools/dev/ui.js http://127.0.0.1:4318/ out     # screenshots (SKIN, PRESET, W, H)
 node tools/dev/attack-check.js                                                   # security, 19 checks
 ```
@@ -237,4 +237,4 @@ On 8 Nov 2026 all of these passed on Windows 11 in both themes, all five layouts
 
 ## 12. Prompt to paste into Claude Code on your PC
 
-> Read HANDOVER.md and README.md in this folder. This is Byte Runner, a beginner-friendly arcade-style interface for Claude Code. First run `npm run practice` and help me check everything works on Windows, then work through section 9 item 1 and section 10 in order. Keep the server free of npm dependencies, keep all art original (no known characters), and keep the Arcade Dusk colours.
+> Read HANDOVER.md and README.md in this folder. This is Easy Mode, a beginner-friendly arcade-style interface for Claude Code. First run `npm run practice` and help me check everything works on Windows, then work through section 9 item 1 and section 10 in order. Keep the server free of npm dependencies, keep all art original (no known characters), and keep the Arcade Dusk colours.

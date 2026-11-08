@@ -1,10 +1,10 @@
 {
-  "name": "byte-runner",
+  "name": "easy-mode-for-claude-code",
   "version": "0.2.0",
-  "description": "A friendly, colourful home for Claude Code. The power of the CLI with the comfort of an app.",
+  "description": "A friendly, colourful home for Claude Code. The power of the CLI, without the scary terminal.",
   "main": "server.js",
   "bin": {
-    "byte-runner": "server.js"
+    "easy-mode-for-claude-code": "server.js"
   },
   "scripts": {
     "start": "node server.js",
@@ -23,5 +23,9 @@
     "beginner-friendly",
     "windows"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paragpandyareal/easy-mode-for-claude-code.git"
+  }
 }

@@ -1,15 +1,15 @@
-# Byte Runner review brief (shared by all reviewers)
+# Easy Mode review brief (shared by all reviewers)
 
 ## What it is
-Byte Runner (v0.1.0) is a free, open source, Windows-first, arcade-styled browser UI for the official Claude Code CLI.
+Easy Mode (v0.1.0) is a free, open source, Windows-first, arcade-styled browser UI for the official Claude Code CLI.
 A zero-dependency Node server (`server.js`) runs the real `claude` binary in stream-json mode per project tab and
 streams events to a browser page (`public/index.html`, `public/app.js`, `public/style.css`, `public/world.js`).
 Goal: keep everything good about the Claude Code CLI (skills, hooks, MCP, slash commands, models, effort, permission modes,
 sub-agents, CLAUDE.md) and bring in the good parts of the Claude desktop app (no terminal, diffs, preview, attachments,
 multiple sessions), so it beats BOTH for non-technical and technical users.
 
-Project folder (READ ONLY for you, do not edit anything in it): `%USERPROFILE%\Projects\Byte Runner`
-Full background: `%USERPROFILE%\Projects\Byte Runner\HANDOVER.md`
+Project folder (READ ONLY for you, do not edit anything in it): `%USERPROFILE%\Projects\Easy Mode`
+Full background: `%USERPROFILE%\Projects\Easy Mode\HANDOVER.md`
 
 ## Rules
 - Do NOT edit, create or delete files in the project folder. You give feedback only.
@@ -19,7 +19,7 @@ Full background: `%USERPROFILE%\Projects\Byte Runner\HANDOVER.md`
 
 ## How to run your own copy (practice mode = pretend Claude, plays a scripted cat-cafe build whatever you type)
 Start a server on YOUR port (run_in_background):
-  cd "%USERPROFILE%/Projects/Byte Runner" && BYTE_RUNNER_PORT=<yourport> node tools/practice.js --no-open
+  cd "%USERPROFILE%/Projects/Easy Mode" && BYTE_RUNNER_PORT=<yourport> node tools/practice.js --no-open
 Then open http://localhost:<yourport>/ in headless Edge with the harness:
   UI_SCRIPT=<your-scenario.js> node "<scratch>/ui.js" http://localhost:<yourport>/ <your-output-folder>
 `ui.js` is in the scratch folder: %TEMP%\claude\9519414f725d5b3e\8dc6e8fa-3b53-425c-8230-513263ad02d5\scratchpad
@@ -30,7 +30,7 @@ Examples in the scratch folder: say-hi.js (new project + send), stale.js. Look a
 Useful selectors: #newName + #makeFolderBtn (new project), #prompt + #sendBtn (send), permission cards appear in #feed
 (buttons inside them), .side-tab[data-tab=changes|preview|helpers|powerups], #modeSel, #modelSel, #effortSel, #undoBtn.
 Set env FAKE_FAST=1 on the server to make the pretend Claude instant; leave it off to watch motion in real time.
-There is also a single-file web demo at `dist/byte-runner-demo.html` (open via file:/// URL).
+There is also a single-file web demo at `dist/easy-mode-demo.html` (open via file:/// URL).
 
 ## The owner's verdict so far
 - "The graphics are just not enough to blow anyone's mind away. And motions are also not up to the mark."

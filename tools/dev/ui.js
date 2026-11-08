@@ -1,4 +1,4 @@
-// Drive Byte Runner in headless Edge over the DevTools protocol, like a user would.
+// Drive Easy Mode in headless Edge over the DevTools protocol, like a user would.
 // usage: node ui.js <url> <outdir> [steps...]
 const { spawn } = require('child_process');
 const fs = require('fs'), path = require('path'), os = require('os');

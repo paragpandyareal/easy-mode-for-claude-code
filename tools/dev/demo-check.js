@@ -1,4 +1,4 @@
-// Check the offline demo page (dist/byte-runner-demo.html) like a visitor would.
+// Check the offline demo page (dist/easy-mode-demo.html) like a visitor would.
 // usage: UI_SCRIPT=tools/dev/demo-check.js node tools/dev/ui.js file:///C:/path/to/demo.html <outdir>
 // env: SKIN=goodboy|arcade  SHOTS=1
 module.exports = async ({ js, shot, sleep, cmd }) => {

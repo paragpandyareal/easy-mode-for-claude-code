@@ -1,5 +1,5 @@
 /* =========================================================
-   BYTE RUNNER · the animated world
+   EASY MODE · the animated world
    Two original pixel worlds that act out what Claude is doing:
      arcade  : Bit the robot runs through a dusk city
      goodboy : Winston the English bulldog and his pack in a sunny park

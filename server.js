@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * BYTE RUNNER
+ * EASY MODE
  * A friendly, colourful home for Claude Code.
  *
  * This small server runs the REAL Claude Code CLI on your computer in its
@@ -30,8 +30,11 @@ const PUBLIC_DIR = path.join(__dirname, process.env.BYTE_RUNNER_UI || 'public');
 const TOKEN = crypto.randomBytes(24).toString('hex');
 
 const CONFIG_DIR = IS_WIN
-  ? path.join(process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming'), 'ByteRunner')
-  : path.join(os.homedir(), '.byte-runner');
+  ? path.join(process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming'), 'EasyModeClaudeCode')
+  : path.join(os.homedir(), '.easy-mode-claude-code');
+// Earlier versions were called Byte Runner. Move their settings and save points across once.
+const OLD_CONFIG_DIR = IS_WIN ? path.join(path.dirname(CONFIG_DIR), 'ByteRunner') : path.join(os.homedir(), '.byte-runner');
+try { if (!fs.existsSync(CONFIG_DIR) && fs.existsSync(OLD_CONFIG_DIR)) fs.renameSync(OLD_CONFIG_DIR, CONFIG_DIR); } catch { /* keep going with a fresh folder */ }
 const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
 const SNAP_ROOT = path.join(CONFIG_DIR, 'savepoints');
 fs.mkdirSync(SNAP_ROOT, { recursive: true });
@@ -122,7 +125,7 @@ class SavePoints {
   }
   git(args, timeout = 60000) {
     return run('git', [`--git-dir=${this.dir}`, `--work-tree=${this.cwd}`, '-c', 'core.autocrlf=false', '-c', 'core.safecrlf=false',
-      '-c', 'core.longpaths=true', '-c', 'core.quotepath=false', '-c', 'user.name=Byte Runner', '-c', 'user.email=savepoint@byte-runner.local',
+      '-c', 'core.longpaths=true', '-c', 'core.quotepath=false', '-c', 'user.name=Easy Mode', '-c', 'user.email=savepoint@easy-mode.local',
       '-c', 'commit.gpgsign=false', ...args], { cwd: this.cwd, timeout });
   }
   async init() {
@@ -137,7 +140,7 @@ class SavePoints {
         fs.mkdirSync(path.join(this.dir, 'info'), { recursive: true });
         fs.writeFileSync(path.join(this.dir, 'info', 'exclude'), [
           '.git/', 'node_modules/', '.venv/', 'venv/', '__pycache__/', '.next/', '.cache/', '.turbo/',
-          '*.log', '.DS_Store', 'Thumbs.db', '.byte-runner/', '.env', '.env.*'].join('\n') + '\n');
+          '*.log', '.DS_Store', 'Thumbs.db', '.byte-runner/', '.easy-mode/', '.env', '.env.*'].join('\n') + '\n');
       }
       return true;
     })();
@@ -323,7 +326,7 @@ class Session {
         broadcast(this.id, 'claude', msg);
       } else {
         // We do not register hooks or in-process MCP servers, so politely decline anything else.
-        this.write({ type: 'control_response', response: { subtype: 'error', request_id: msg.request_id, error: 'Not supported by Byte Runner' } });
+        this.write({ type: 'control_response', response: { subtype: 'error', request_id: msg.request_id, error: 'Not supported by Easy Mode' } });
       }
       return;
     }
@@ -788,7 +791,7 @@ async function handleApi(req, res, url, p) {
 
     if (req.method === 'POST' && p === '/api/make-folder') {
       const body = await readBody(req);
-      const base = path.join(os.homedir(), 'Byte Runner Projects');
+      const base = path.join(os.homedir(), 'Easy Mode Projects');
       const name = String(body.name || 'my-project').replace(/[^\w\- ]+/g, '').trim().slice(0, 60) || 'my-project';
       let dir = path.join(base, name); let n = 2;
       while (fs.existsSync(dir)) dir = path.join(base, `${name} ${n++}`);
@@ -859,7 +862,7 @@ async function handleApi(req, res, url, p) {
           s.redoCommit = r.redo || null;
           s.emitApp('undone', { label: cp.label, redo: !!r.redo });
           // Tell Claude with the next message, so it does not assume its edits are still there.
-          s.pendingNote = `(Note from the Byte Runner app: I pressed Undo, so the project files were rolled back to how they were before "${cp.label}". Files may differ from what you remember, so check before editing.)`;
+          s.pendingNote = `(Note from the Easy Mode app: I pressed Undo, so the project files were rolled back to how they were before "${cp.label}". Files may differ from what you remember, so check before editing.)`;
         }
         return send(res, r.ok ? 200 : 500, r);
       }
@@ -867,7 +870,7 @@ async function handleApi(req, res, url, p) {
         if (!s.redoCommit) return send(res, 404, { error: 'Nothing to redo.' });
         if (s.busy) return send(res, 409, { error: 'Wait for Claude to finish first.' });
         const r = await s.savepoints.restore(s.redoCommit);
-        if (r.ok) { s.redoCommit = null; s.emitApp('redone'); s.scheduleChanges(50); s.pendingNote = '(Note from the Byte Runner app: I pressed Redo, so the files Claude changed are back. Check them before editing.)'; }
+        if (r.ok) { s.redoCommit = null; s.emitApp('redone'); s.scheduleChanges(50); s.pendingNote = '(Note from the Easy Mode app: I pressed Redo, so the files Claude changed are back. Check them before editing.)'; }
         return send(res, r.ok ? 200 : 500, r);
       }
       if (action === 'diff') return send(res, 200, { diff: await s.savepoints.diff(s.turnCommit, body.file || url.searchParams.get('file')) });
@@ -933,7 +936,7 @@ async function handleApi(req, res, url, p) {
 
 server.on('error', e => {
   if (e.code === 'EADDRINUSE') {
-    console.log(`\n  Byte Runner already seems to be running. Opening it in your browser...\n`);
+    console.log(`\n  Easy Mode already seems to be running. Opening it in your browser...\n`);
     openBrowser(`http://localhost:${PORT}`);
     setTimeout(() => process.exit(0), 500);
   } else { console.error(e); process.exit(1); }
@@ -942,7 +945,7 @@ server.on('error', e => {
 server.listen(PORT, HOST, async () => {
   const url = `http://localhost:${PORT}`;
   console.log('');
-  console.log('  ██████  BYTE RUNNER  v' + VERSION);
+  console.log('  ██████  EASY MODE for Claude Code  v' + VERSION);
   console.log('  ██  ██  A friendly home for Claude Code');
   console.log('  ██████');
   console.log('');

@@ -1,10 +1,10 @@
 @echo off
-title Byte Runner (keep this window open)
+title Easy Mode (keep this window open)
 cd /d "%~dp0"
 where node >nul 2>nul
 if errorlevel 1 (
   echo.
-  echo   Node.js is not installed yet. Double-click "Setup Byte Runner.bat" first.
+  echo   Node.js is not installed yet. Double-click "Setup Easy Mode.bat" first.
   echo.
   pause
   exit /b 1

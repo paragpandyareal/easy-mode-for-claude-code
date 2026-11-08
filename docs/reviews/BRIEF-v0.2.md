@@ -1,8 +1,8 @@
-# Byte Runner v0.2 review brief (shared by all reviewers)
+# Easy Mode v0.2 review brief (shared by all reviewers)
 
-Byte Runner is a free, Windows-first browser UI for the official Claude Code CLI. A zero-dependency Node server (`server.js`) runs the real `claude` binary in stream-json mode for each project and streams events to a browser page. Its goal is to beat both the Claude Code CLI and the Claude desktop app on usability and configurability, for non-technical and technical users alike.
+Easy Mode is a free, Windows-first browser UI for the official Claude Code CLI. A zero-dependency Node server (`server.js`) runs the real `claude` binary in stream-json mode for each project and streams events to a browser page. Its goal is to beat both the Claude Code CLI and the Claude desktop app on usability and configurability, for non-technical and technical users alike.
 
-Project folder: `%USERPROFILE%\Projects\Byte Runner`. It is READ ONLY for you, so do not edit, create or delete anything in it.
+Project folder: `%USERPROFILE%\Projects\Easy Mode`. It is READ ONLY for you, so do not edit, create or delete anything in it.
 The new UI under review is in `public-next/`:
 - `index.html`, `style.css`
 - `app.js`: the main logic, about 1,600 lines
@@ -21,7 +21,7 @@ The server is `server.js`. Background is in `HANDOVER.md`, the plan is in `docs/
 ## How to run your own copy
 Start a server in the background, then drive headless Edge with the harness:
 
-  cd "%USERPROFILE%/Projects/Byte Runner" && BYTE_RUNNER_UI=public-next BYTE_RUNNER_PORT=<yourport> FAKE_FAST=1 node tools/practice.js --no-open
+  cd "%USERPROFILE%/Projects/Easy Mode" && BYTE_RUNNER_UI=public-next BYTE_RUNNER_PORT=<yourport> FAKE_FAST=1 node tools/practice.js --no-open
   UI_SCRIPT=<your-scenario.js> node tools/dev/ui.js http://localhost:<yourport>/ <your-output-folder>
 
 To watch the motion in real time, leave FAKE_FAST off.

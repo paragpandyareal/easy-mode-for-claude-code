@@ -56,7 +56,7 @@ module.exports = async ({ js, shot, sleep, cmd }) => {
   ok(asked > 0, 'Claude asked for permission ' + asked + ' times and we said yes');
   ok(await q('.level-clear[data-kind="big"]'), 'round finished with a level clear');
   ok(await visible('#usageRings .ring'), 'usage rings show by Undo');
-  ok(await q('#board .card-ring'), 'memory ring on the project card');
+  ok(!(await q('#board .card-ring')), 'no memory ring on the card while memory is low');
   ok(!(await visible('.session-feed > .tool')), 'steps are hidden in Just results');
   ok(/✓ \d+ steps/.test(await txt('.progress-line')), 'progress line sums up: ' + await txt('.progress-line'));
   await click('.progress-line'); await sleep(200);

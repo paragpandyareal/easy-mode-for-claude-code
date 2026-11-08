@@ -1,5 +1,5 @@
 /* =========================================================
-   BYTE RUNNER · grid
+   EASY MODE · grid
    A small dashboard layout: 12 columns, rows sized to the window.
    In Arrange mode, drag a block by its title bar and resize it from
    the corner (or use the arrow keys on its grip). Blocks never overlap:

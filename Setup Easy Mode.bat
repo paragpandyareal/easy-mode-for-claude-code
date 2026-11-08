@@ -1,3 +1,3 @@
 @echo off
-title Byte Runner setup
+title Easy Mode setup
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup.ps1"

@@ -1,5 +1,5 @@
 /* =========================================================
-   BYTE RUNNER · demo mode
+   EASY MODE · demo mode
    Used only when the page is opened without the local server
    (for example the online preview). It plays a pretend Claude Code
    session using exactly the same events the real one sends.
@@ -9,7 +9,7 @@
   const sleep = ms => new Promise(r => setTimeout(r, ms));
   const uid = () => Math.random().toString(16).slice(2, 10);
 
-  const CWD = 'C:\\Users\\you\\Byte Runner Projects\\cat-cafe';
+  const CWD = 'C:\\Users\\you\\Easy Mode Projects\\cat-cafe';
   const CAFE_HTML = `<!doctype html>
 <html lang="en">
 <head>
@@ -214,7 +214,7 @@ main { display: grid; gap: 16px; padding: 24px; max-width: 720px; margin: -30px 
       await sleep(80);
       if (path === '/api/info') return { claudeFound: true, recentProjects: [CWD, 'C:\\Users\\you\\Documents\\budget-tracker'], sessions: [info()] };
       if (path === '/api/pick-folder') return { folder: CWD };
-      if (path === '/api/make-folder') return { folder: 'C:\\Users\\you\\Byte Runner Projects\\' + (body.name || 'my-project') };
+      if (path === '/api/make-folder') return { folder: 'C:\\Users\\you\\Easy Mode Projects\\' + (body.name || 'my-project') };
       if (path === '/api/login') return { ok: true };
       if (path === '/api/session/start') {
         if (body.mode) mode = body.mode;
