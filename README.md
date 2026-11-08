@@ -177,7 +177,7 @@ More themes (a cosy café, a space station), showing old messages after **Contin
 
 ## Licence and credits
 
-MIT. Fonts are under the SIL Open Font License.
+MIT, see [LICENSE](LICENSE). The bundled fonts (Fredoka, Nunito, JetBrains Mono, Press Start 2P) are under the SIL Open Font License, see `public/fonts/OFL-LICENSE.txt`.
 
 **Art.** The Good Boy Club art (Winston, the pack, Diesel and the park) was made by the project owner. Bit and the Arcade city are drawn in code. No characters from games, films or brands are used.
 
