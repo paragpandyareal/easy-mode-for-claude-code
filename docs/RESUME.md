@@ -1,6 +1,6 @@
 # Where we stopped (8 Nov 2026, about 11:45)
 
-**How to resume:** open Claude Code in `%USERPROFILE%\Projects\Easy Mode` (or anywhere, and point it here), then follow "Next steps" below. Start with step 1, rewriting `public-next/app.js`, and build the Good Boy Club cartoon world from the art listed at the bottom. Run tests with `tools/dev/ui.js`.
+**How to resume:** open Claude Code in this project folder (the owner keeps it in Desktop\Claude Code\Easy Mode for Claude Code), then follow "Next steps" below. Start with step 1, rewriting `public-next/app.js`, and build the Good Boy Club cartoon world from the art listed at the bottom. Run tests with `tools/dev/ui.js`.
 
 The app in `public/` is the **working v0.1 UI plus today's fixes**. It is safe to use.
 The v0.2 redesign is **in progress in `public-next/`** and is not wired up yet.
