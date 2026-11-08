@@ -119,3 +119,11 @@ v0.2.0 is DONE and LIVE. Everything in docs/reviews/FINDINGS-v0.2.md and docs/TO
 - Tests all pass: full.js (both themes), demo-check.js, every preset at 1280x720, art-failure fallback, attack-check 19/19.
 - Ideas for later: show old messages after Continue (replay the .jsonl transcript), check the Higgsfield licence before launch, a packaged .exe, more themes.
 - If editing the UI: work in public-next, then `cp -r public-next/. public/` and `node tools/build-demo.js`.
+
+## 8 Nov ~20:10: renamed and published
+- Name is now **Easy Mode for Claude Code**. Repo: https://github.com/paragpandyareal/easy-mode-for-claude-code (public, MIT, release v0.2.0 with demo.mp4 and the one-file demo).
+- Owner still to do by hand: upload docs/media/social-preview.png in repo Settings > General > Social preview (no API for it).
+- Listing plan (WAITING for owner to confirm before submitting anything):
+  - PR now: jqueryscript/awesome-claude-code (Clients & GUIs), filipecalegario/awesome-vibe-coding (Local Apps), awesome-vibe-coding/awesome-vibe-coding (Desktop & Local Apps, disclose own project), Omrigotlieb/awesome-anthropic (Coding & Developer Tools, disclose), ccplugins/awesome-claude-code-plugins (Companion Apps & Tools), ai-for-developers/awesome-ai-coding-tools, steven2358/awesome-generative-ai (Custom interfaces, lands in Discoveries), mahseema/awesome-ai-tools, jamesmurdza/awesome-ai-devtools (loose fit).
+  - Later: hesreallyhim/awesome-claude-code (owner submits via WEB issue form only, from 22 Nov if commits continue, or at 100 stars). 0PandaDEV/awesome-windows (needs 50 stars and 30 days).
+  - Outside GitHub (owner's accounts): Show HN, r/ClaudeAI, r/ClaudeCode, r/vibecoding, Product Hunt, AlternativeTo, dev.to, Claude Developers Discord.
